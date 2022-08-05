@@ -124,10 +124,12 @@ def insertMany2(connection, table, fvList):
     cursor = connection.cursor()
     values = []
     fields = ", ".join(list(fvList[0].keys())) # all the keys must be the same
+
+    # conglomerate the values into the query string
+    query = f"INSERT INTO {table} ({fields}) VALUES "
     for fv in fvList:
         values += [tuple(list(fv.values()))]
     print(f"values: {values}")
-    query = f"INSERT INTO {table} ({fields}) VALUES "
     queryValues = []
     for v in values:
         queryValues += [str(v)]
@@ -163,15 +165,22 @@ def main():
         createTableIfNotExists(cnxn, t, newTableFields)
 
         N = 5
+
+        # the "value" value can be a stringified or non-stringified integer
+        records = [{"name":f"{t}_mark", "value":i} for i in range(N)]
         records = [{"name":f"{t}_mark", "value":str(i)} for i in range(N)]
+
         # insert N records in the table one at a time
+        #=============================================
         # for r in records:
         #     insertOne(cnxn, t, **r)
 
         # insert N records in one transaction committed
+        #=============================================
         # insertMany(cnxn, t, records)
 
         # insert N records in one insert
+        #=============================================
         insertMany2(cnxn, t, records)
 
     listTables(cnxn)
