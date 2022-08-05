@@ -93,10 +93,7 @@ def insertOne(connection, table, **fvPairs):
     print(f"inserting into table {table}")
     fields = ', '.join(list(fvPairs.keys()))
     values = tuple(list(fvPairs.values()))
-    # print(f"fields: {fields}")
-    # print(f"values: {values}")
     query = f"INSERT INTO {table} ({fields}) VALUES "+f'{values};'
-    # print(query)
     try:
         cursor = connection.cursor()
         cursor.execute(query)
@@ -105,10 +102,47 @@ def insertOne(connection, table, **fvPairs):
     except Exception as e:
         print(f"OOPS insert error: {e}")
 
+# insert many records
+def insertMany(connection, table, fvList):
+    print(f"inserting multiple records into table {table}")
+    cursor = connection.cursor()
+    for fv in fvList:
+        fields = ', '.join(list(fv.keys()))
+        values = tuple(list(fv.values()))
+        query = f"INSERT INTO {table} ({fields}) VALUES "+f'{values};'
+        try:
+            cursor.execute(query)
+        except Exception as e:
+            print(f"OOPS insert error: {e}")
+    connection.commit()
+    cursor.close()
+
+# insert many records
+# records = [{"name":f"{t}_mark", "value":str(i)} for i in range(N)]
+def insertMany2(connection, table, fvList):
+    print(f"inserting multiple records into table {table}")
+    cursor = connection.cursor()
+    values = []
+    fields = ", ".join(list(fvList[0].keys())) # all the keys must be the same
+    for fv in fvList:
+        values += [tuple(list(fv.values()))]
+    print(f"values: {values}")
+    query = f"INSERT INTO {table} ({fields}) VALUES "
+    queryValues = []
+    for v in values:
+        queryValues += [str(v)]
+    query += ','.join(queryValues)
+    print(query)
+    try:
+        cursor.execute(query)
+    except Exception as e:
+        print(f"OOPS insert error: {e}")
+    connection.commit()
+    cursor.close()
+
 # select all five records in the table
 def selectWhere(connection, table, condition):
     command =  f"""SELECT * FROM {table} where {condition} """
-    print(f"selectwhere command: {command}")
     cursor = cnxn.cursor()
     cursor.execute(command)
     row = cursor.fetchone()
@@ -127,11 +161,18 @@ def main():
     newTableFields = ["id integer identity(1,1)", "name varchar(32)", "value integer"]
     for t in newTableNames:
         createTableIfNotExists(cnxn, t, newTableFields)
-        # insert N records in the table
+
         N = 5
         records = [{"name":f"{t}_mark", "value":str(i)} for i in range(N)]
-        for r in records:
-            insertOne(cnxn, t, **r)
+        # insert N records in the table one at a time
+        # for r in records:
+        #     insertOne(cnxn, t, **r)
+
+        # insert N records in one transaction committed
+        # insertMany(cnxn, t, records)
+
+        # insert N records in one insert
+        insertMany2(cnxn, t, records)
 
     listTables(cnxn)
 
