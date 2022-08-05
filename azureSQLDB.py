@@ -21,7 +21,6 @@ class AzureSQLDB(object):
         connect_string = f"DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password};"
         try:
             self.cnxn = pyodbc.connect(connect_string)
-            cursor = self.cnxn.cursor()
         except Exception:
             print("Failed to connect")
             exit(0)
@@ -102,7 +101,7 @@ class AzureSQLDB(object):
         values = tuple(list(fvPairs.values()))
         query = f"INSERT INTO {table} ({fields}) VALUES "+f'{values};'
         try:
-            cursor = connection.cursor()
+            cursor = self.cnxn.cursor()
             cursor.execute(query)
             self.cnxn.commit()
             cursor.close()
@@ -146,7 +145,7 @@ class AzureSQLDB(object):
             cursor.execute(query)
         except Exception as e:
             print(f"OOPS insert error: {e}")
-        connection.commit()
+        self.cnxn.commit()
         cursor.close()
 
     # select all five records in the table
@@ -182,12 +181,12 @@ def main():
 
         # insert N records in the table one at a time
         #=============================================
-        # for r in records:
-        #     asdb.insertOne(t, **r)
+        for r in records:
+            asdb.insertOne(t, **r)
 
         # insert N records in one transaction committed
         #=============================================
-        asdb.insertMany(t, records)
+        # asdb.insertMany(t, records)
 
         # insert N records in one insert
         #=============================================
