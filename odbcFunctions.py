@@ -163,7 +163,8 @@ def main():
     newTableFields = ["id integer identity(1,1)", "name varchar(32)", "value integer"]
     for t in newTableNames:
         createTableIfNotExists(cnxn, t, newTableFields)
-
+        
+    for t in newTableNames:
         N = 5
 
         # the "value" value can be a stringified or non-stringified integer
