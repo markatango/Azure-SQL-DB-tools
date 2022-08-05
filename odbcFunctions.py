@@ -117,8 +117,9 @@ def selectWhere(connection, table, condition):
         print(row)
         row = cursor.fetchone()
         rows += [row]
-    return rows
     cursor.close()
+    return rows
+
 
 def main():
     listTables(cnxn)
