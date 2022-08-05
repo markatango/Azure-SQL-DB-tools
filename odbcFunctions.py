@@ -156,14 +156,13 @@ def selectWhere(connection, table, condition):
     cursor.close()
     return rows
 
-
 def main():
     listTables(cnxn)
     newTableNames = ['hf28','hf27','hf26','hf25','hf24']
     newTableFields = ["id integer identity(1,1)", "name varchar(32)", "value integer"]
     for t in newTableNames:
         createTableIfNotExists(cnxn, t, newTableFields)
-        
+
     for t in newTableNames:
         N = 5
 
