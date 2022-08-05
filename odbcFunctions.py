@@ -124,7 +124,7 @@ def selectWhere(connection, table, condition):
 def main():
     listTables(cnxn)
     newTableNames = ['hf28','hf27','hf26','hf25','hf24']
-    newTableFields = ["id integer identity(1,1)", "name varchar(32)", "value varchar(32)"]
+    newTableFields = ["id integer identity(1,1)", "name varchar(32)", "value integer"]
     for t in newTableNames:
         createTableIfNotExists(cnxn, t, newTableFields)
         # insert N records in the table
@@ -137,7 +137,7 @@ def main():
 
     for t in newTableNames:
         for v in range(N):
-            r = selectWhere(cnxn, t, f"value = '{v}';")
+            r = selectWhere(cnxn, t, f"value = {v};")
 
     for t in newTableNames:
         dropTableIfExists(cnxn, t)
