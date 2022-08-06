@@ -128,18 +128,13 @@ class AzureSQLDB(object):
     def insertMany2(self, table, fvList):
         print(f"inserting multiple records into table {table}")
         cursor = self.cnxn.cursor()
-        values = []
+
         fields = ", ".join(list(fvList[0].keys())) # all the keys must be the same
+        values = [tuple(list(fv.values())) for fv in fvList]
 
         # conglomerate the values into the query string
-        query = f"INSERT INTO {table} ({fields}) VALUES "
-        for fv in fvList:
-            values += [tuple(list(fv.values()))]
-        print(f"values: {values}")
-        queryValues = []
-        for v in values:
-            queryValues += [str(v)]
-        query += ','.join(queryValues)
+        queryValues = [str(v) for v in values]
+        query = f"INSERT INTO {table} ({fields}) VALUES " +','.join(queryValues)
         print(query)
         try:
             cursor.execute(query)
@@ -181,8 +176,8 @@ def main():
 
         # insert N records in the table one at a time
         #=============================================
-        for r in records:
-            asdb.insertOne(t, **r)
+        # for r in records:
+        #     asdb.insertOne(t, **r)
 
         # insert N records in one transaction committed
         #=============================================
@@ -190,7 +185,7 @@ def main():
 
         # insert N records in one insert
         #=============================================
-        # asdb.insertMany2(t, records)
+        asdb.insertMany2(t, records)
 
     asdb.listTables()
 
