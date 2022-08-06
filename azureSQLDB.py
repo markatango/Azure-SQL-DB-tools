@@ -1,10 +1,11 @@
 import pyodbc 
 import os
 import time
+from dbInterface import DBInterface
 
-class AzureSQLDB(object):
+class AzureSQLDB(DBInterface):
     def __init__(self):
-        self.cnxn = None
+        super().__init__()
 
     def listRows(self, cursor):
         row = cursor.fetchone()
