@@ -171,8 +171,8 @@ def main():
         N = 5
 
         # the "value" value can be a stringified or non-stringified integer
-        records = [{"name":f"{t}_mark", "value":i} for i in range(N)]
-        records = [{"name":f"{t}_mark", "value":str(i)} for i in range(N)]
+        records = [{"name":f"mark", "value":i} for i in range(N)]
+        records = [{"name":f"mark", "value":str(i)} for i in range(N)]
 
         # insert N records in the table one at a time
         #=============================================
@@ -189,9 +189,12 @@ def main():
 
     asdb.listTables()
 
+    # for t in newTableNames:
+    #     for v in range(N):
+    #         r = asdb.selectWhere(t, f"value = {v};")
+
     for t in newTableNames:
-        for v in range(N):
-            r = asdb.selectWhere(t, f"value = {v};")
+        r = asdb.selectWhere(t, f"name = 'mark';")
 
     for t in newTableNames:
         asdb.dropTableIfExists(t)
