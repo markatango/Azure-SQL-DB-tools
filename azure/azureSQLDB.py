@@ -10,7 +10,6 @@ dirpath = Path(dir_path)
 parent = dirpath.parent.absolute()  
 sys.path.append(path.join(parent,"dbinterface"))
 
-
 from dbInterface import DBInterface
 
 class AzureSQLDB(DBInterface):
@@ -38,7 +37,7 @@ class AzureSQLDB(DBInterface):
         print("Connected...")
 
     # Get sql server details
-    def getServerDetails(self):
+    def showServerDetails(self):
         cursor = self.cnxn.cursor()
         cursor.execute("SELECT @@version;") 
         row = cursor.fetchone() 
@@ -171,7 +170,7 @@ class AzureSQLDB(DBInterface):
 def main():
     asdb = AzureSQLDB()
     asdb.connect()
-    asdb.getServerDetails()
+    asdb.showServerDetails()
     asdb.listTables()
     newTableNames = ['hf28','hf27','hf26','hf25','hf24']
     newTableFields = ["id integer identity(1,1)", "name varchar(32)", "value integer"]
