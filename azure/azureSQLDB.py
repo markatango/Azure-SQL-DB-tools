@@ -7,7 +7,7 @@ from pathlib import Path
 real_path = path.realpath(__file__)
 dir_path = path.dirname(real_path)
 dirpath = Path(dir_path)
-parent = dirpath.parent.absolute()
+parent = dirpath.parent.absolute()  
 sys.path.append(path.join(parent,"dbinterface"))
 
 
