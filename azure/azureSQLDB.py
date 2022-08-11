@@ -29,12 +29,18 @@ class AzureSQLDB(DBInterface):
         driver = '{ODBC Driver 13 for SQL Server}'
         database = "amya"
         connect_string = f"DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password};"
-        try:
-            self.cnxn = pyodbc.connect(connect_string)
-        except Exception:
-            print("Failed to connect")
-            exit(0)
-        print("Connected...")
+        for i in range(5):
+            j = i+1
+            try:
+                self.cnxn = pyodbc.connect(connect_string)
+                print(f"Connected to Azure SQL Database on attempt {j}")
+                break
+            except Exception:
+                print(f"Failed to connect on attempt {j}")
+        if not self.cnxn:
+            print(f"Failed to connect after {j} attempts, exiting with code 1")
+            exit(1)
+        
 
     # Get sql server details
     def showServerDetails(self):
